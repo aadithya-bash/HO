@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>HideOut Cottages — Kulamavu, Idukki</title>
+    <!-- Google Fonts: Elegant Serif + Clean Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon (user provided) -->
+    <link rel="icon" type="image/png" href="HO_favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #FCF9F2;
+            font-family: 'Inter', sans-serif;
+            color: #1e2a2a;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2dbcd;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d5a4b;
+            border-radius: 3px;
+        }
+
+        h1, h2, h3, .serif-heading {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(36px);
+            transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.1), transform 0.9s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-card {
+            background: rgba(255, 248, 235, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            border: 1px solid rgba(200, 180, 140, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: #1b4332;
+            color: #FCF9F2;
+            padding: 0.9rem 2.2rem;
+            border-radius: 3rem;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .btn-primary:hover {
+            background-color: #0f2e2e;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -8px rgba(0,0,0,0.2), 0 0 18px rgba(45, 106, 79, 0.4);
+        }
+        .btn-outline-light {
+            background: transparent;
+            border: 1.5px solid #FCF9F2;
+            color: #FCF9F2;
+            padding: 0.8rem 2rem;
+            border-radius: 3rem;
+            font-weight: 500;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .btn-outline-light:hover {
+            background: #FCF9F2;
+            color: #1b4332;
+        }
+
+        .logo-bar {
+            position: absolute;
+            top: 1.8rem;
+            left: 2rem;
+            z-index: 20;
+            mix-blend-mode: normal;
+        }
+        .logo-bar img {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+        }
+        @media (max-width: 640px) {
+            .logo-bar img { height: 38px; }
+            .logo-bar { top: 1.2rem; left: 1.2rem; }
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: url('HO_E_1.jpg') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10, 25, 20, 0.65) 0%, rgba(0, 0, 0, 0.5) 100%);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 1.5rem;
+            color: #FCF9F2;
+        }
+        .hero-content h1 {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .hero-tagline {
+            font-size: 1.5rem;
+            font-weight: 400;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            margin-bottom: 0.75rem;
+        }
+        .hero-sub {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            letter-spacing: 0.3px;
+        }
+        .scroll-down {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            color: #FCF9F2;
+            font-size: 1.8rem;
+            animation: bounce 2.2s infinite;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(12px); }
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .about-img img {
+            width: 100%;
+            border-radius: 2rem;
+            object-fit: cover;
+            height: 100%;
+            min-height: 380px;
+            box-shadow: 0 20px 35px -15px rgba(0,0,0,0.2);
+            transition: transform 0.4s ease;
+        }
+        .about-img img:hover {
+            transform: scale(1.01);
+        }
+        .about-text h3 {
+            font-size: 2rem;
+            color: #1b4332;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .about-text .poem {
+            font-size: 1.4rem;
+            line-height: 1.4;
+            margin: 1.5rem 0;
+            font-family: 'Playfair Display', serif;
+            color: #2d5a4b;
+        }
+        .about-text p {
+            color: #3a4a4a;
+            margin-top: 1rem;
+        }
+
+        /* Default: 3 columns on desktop */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        /* Tablet: 2 columns */
+        @media (max-width: 850px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Mobile: 1 column */
+        @media (max-width: 550px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 1.5rem;
+            cursor: pointer;
+            background: #fff6eb;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: block;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .gallery-caption {
+            padding: 0.8rem 1rem;
+            font-size: 0.85rem;
+            color: #4c5e5e;
+            background: #FFFBF5;
+            text-align: center;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        .experience-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .exp-card {
+            flex: 1 1 180px;
+            text-align: center;
+            padding: 1.8rem 1rem;
+            background: rgba(255, 248, 235, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            transition: all 0.25s ease;
+            border: 1px solid rgba(150, 120, 80, 0.2);
+        }
+        .exp-card i {
+            font-size: 2.2rem;
+            color: #2d6a4f;
+            margin-bottom: 1rem;
+        }
+        .exp-card h4 {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 1.1rem;
+        }
+        .exp-card p {
+            font-size: 0.85rem;
+            color: #5d6e5e;
+        }
+        .exp-card:hover {
+            transform: translateY(-8px);
+            background: rgba(245, 235, 215, 0.9);
+        }
+
+        .note-card {
+            max-width: 680px;
+            margin: 1rem auto 0 auto;
+            padding: 2rem 2rem;
+            text-align: center;
+            font-size: 1.05rem;
+            background: rgba(245, 240, 228, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            border: 1px solid #dccfbc;
+            color: #2c4235;
+        }
+        .note-card i {
+            font-size: 1.6rem;
+            color: #7f8c5e;
+            margin-bottom: 0.8rem;
+            display: inline-block;
+        }
+
+        /* location feel with overlay */
+        .location-feel {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(rgba(20, 35, 28, 0.75), rgba(10, 25, 20, 0.8)), url('klmv_scn.jpg') center/cover fixed;
+            border-radius: 2rem;
+            margin: 2rem 0 1.5rem 0;
+            color: #FCF9F2;
+        }
+        .location-feel h3 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .location-feel p {
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+            font-weight: 400;
+        }
+        .location-feel .quiet-border {
+            background: #dccf9a;
+            width: 70px;
+            height: 2px;
+            margin: 1rem auto;
+        }
+
+        /* interactive map container */
+        .map-container {
+            max-width: 1000px;
+            margin: 2rem auto 0 auto;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(210, 180, 140, 0.4);
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 400px;
+            display: block;
+            border: 0;
+        }
+        .map-caption {
+            text-align: center;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: #5c6e5c;
+            letter-spacing: 0.3px;
+            font-style: italic;
+        }
+
+        .contact-flex {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        .contact-item {
+            background: rgba(255, 248, 240, 0.7);
+            backdrop-filter: blur(8px);
+            padding: 1.5rem 2rem;
+            border-radius: 2rem;
+            min-width: 220px;
+            text-align: center;
+            border: 1px solid rgba(150, 120, 80, 0.2);
+        }
+        .contact-item i {
+            font-size: 1.8rem;
+            color: #2d6a4f;
+            margin-bottom: 0.7rem;
+        }
+        .contact-item a {
+            text-decoration: none;
+            color: #1e2a2a;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .contact-item a:hover {
+            color: #2d6a4f;
+        }
+
+        .final-cta {
+            position: relative;
+            background: url('HO_E_1.jpg') center/cover no-repeat fixed;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(20, 40, 30, 0.75) 0%, rgba(0, 0, 0, 0.65) 100%);
+        }
+        .final-cta .cta-content {
+            position: relative;
+            z-index: 2;
+            color: #FCF9F2;
+        }
+        .final-cta h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        .final-cta p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        footer {
+            background: #0f2e2e;
+            color: #d6dfcf;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+        }
+        footer p {
+            margin: 0.2rem 0;
+        }
+
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.25s ease;
+        }
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .lightbox img {
+            max-width: 85%;
+            max-height: 80%;
+            border-radius: 1rem;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.4);
+        }
+        .close-lightbox {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2.5rem;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        @media (max-width: 850px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            section {
+                padding: 3.5rem 0;
+            }
+            .hero {
+                background-attachment: scroll;
+            }
+            .final-cta {
+                background-attachment: scroll;
+            }
+            .container {
+                padding: 0 1.5rem;
+            }
+            .map-container iframe {
+                height: 320px;
+            }
+        }
+        @media (max-width: 550px) {
+            .hero-tagline {
+                font-size: 1.2rem;
+            }
+            .exp-card {
+                flex-basis: 140px;
+            }
+        }
+        .section-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1b4332;
+            font-weight: 500;
+        }
+        .quiet-border {
+            border-bottom: 2px solid #cbbf9a;
+            width: 70px;
+            margin: 1rem auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="logo-bar">
+    <img src="HO_logo.png" alt="HideOut Cottages logo">
+</div>
+
+<section class="hero" id="home">
+    <div class="hero-content">
+        <h1>HideOut Cottages</h1>
+        <div class="hero-tagline">Not luxury. Just peace.</div>
+        <div class="hero-sub">3 km away from Kulamavu. Closer to silence.</div>
+        <a href="#" class="btn-primary" id="bookHeroBtn">Book Your Stay <i class="fas fa-arrow-right" style="margin-left: 6px;"></i></a>
+    </div>
+    <div class="scroll-down" id="scrollDownBtn">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<section id="about">
+    <div class="container">
+        <div class="about-grid fade-up">
+            <div class="about-img">
+                <img src="klmv_scn.jpg" alt="Kulamavu reservoir wide view, misty mountains">
+            </div>
+            <div class="about-text">
+                <h3>Wake up to green.<br>Sleep with silence.</h3>
+                <div class="poem">No noise. No rush. Just you.</div>
+                <p>Hidden in the lush hills of Idukki, HideOut Cottages is a cozy escape where the forest canopy meets comfort. Surrounded by whispering trees, away from the town's clamor — a place where time slows down. Private, earthy, and deeply quiet.</p>
+                <p style="margin-top: 0.8rem;">Cozy interiors, open skies, and mornings that feel like a prayer. This is not a resort — it’s a return to yourself.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="gallery">
+    <div class="container">
+        <div class="section-title fade-up">— stillness in frames —</div>
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="gallery-item" data-img="HO_G_1.jpg">
+                <img src="HO_G_1.jpg" alt="Ground floor cozy living interior">
+                <div class="gallery-caption">Inside, it's calm.</div>
+            </div>
+            <div class="gallery-item" data-img="HO_T_1.jpg">
+                <img src="HO_T_1.jpg" alt="Top floor bedroom with earthy tones">
+                <div class="gallery-caption">Slow mornings, warm light.</div>
+            </div>
+            <div class="gallery-item" data-img="HO_T_2.jpg">
+                <img src="HO_T_2.jpg" alt="Second top floor reading nook">
+                <div class="gallery-caption">Steps away from silence.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="experience">
+    <div class="container">
+        <div class="section-title fade-up">stay · breathe · unwind</div>
+        <div class="experience-grid fade-up">
+            <div class="exp-card"><i class="fas fa-volume-off"></i><h4>Private and quiet</h4><p>No crowds, just peace</p></div>
+            <div class="exp-card"><i class="fas fa-leaf"></i><h4>Surrounded by nature</h4><p>Forest canopy views</p></div>
+            <div class="exp-card"><i class="fas fa-utensils"></i><h4>Cook your own meals</h4><p>Full pantry freedom</p></div>
+            <div class="exp-card"><i class="fas fa-mug-saucer"></i><h4>Food on request</h4><p>Available at extra cost</p></div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="note-card fade-up">
+            <i class="fas fa-seedling"></i>
+            <p style="font-size: 1.1rem; font-weight: 400;">No in-house chef.<br>We keep it simple.<br>If you need food, we'll arrange it — at extra cost.</p>
+        </div>
+    </div>
+</section>
+
+<!-- LOCATION SECTION: includes feel text + interactive map with custom label -->
+<section id="location">
+    <div class="container">
+        <div class="location-feel fade-up">
+            <h3>3 km away from Kulamavu town.</h3>
+            <p>Closer to forest. Far from chaos.</p>
+            <div class="quiet-border"></div>
+            <p style="font-size: 0.95rem; margin-top: 1rem; opacity: 0.9;">Nestled in Idukki's Western Ghats — mist, mountains, and absolute stillness.<br>Overlooking the serene Kulamavu reservoir.</p>
+        </div>
+        
+        <!-- Interactive Google Map with custom "HideOut Cottages" label -->
+        <div class="map-container fade-up">
+            <iframe 
+                src="https://www.google.com/maps?q=HideOut+Cottages+Kulamavu+Idukki+Kerala&output=embed"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="HideOut Cottages location on Google Maps">
+            </iframe>
+        </div>
+        <div class="map-caption fade-up">📍 Find us among the hills — Kulamavu, Idukki, Kerala. Drag to explore, scroll to zoom.</div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container">
+        <div class="section-title fade-up">reach out gently</div>
+        <div class="contact-flex fade-up">
+            <!-- Call card with both numbers -->
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <h4 style="margin-top: 0.5rem; font-weight: 500;">Call</h4>
+                <a href="tel:+919446868210">+91 94468 68210</a><br>
+                <a href="tel:+918304914600">+91 83049 14600</a>
+            </div>
+            <!-- WhatsApp card -->
+            <div class="contact-item">
+                <i class="fab fa-whatsapp"></i>
+                <h4 style="margin-top: 0.5rem; font-weight: 500;">WhatsApp</h4>
+                <a href="https://wa.me/919446868210" target="_blank" rel="noopener noreferrer">+91 94468 68210</a>
+            </div>
+            <!-- Email card -->
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <h4 style="margin-top: 0.5rem; font-weight: 500;">Email</h4>
+                <a href="mailto:06idukki@gmail.com">06idukki@gmail.com</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="final-cta">
+    <div class="cta-content">
+        <h2>Come for a stay.<br>Leave with silence.</h2>
+        <p>Let the forest hold you.</p>
+        <a href="#" class="btn-outline-light" id="finalBookBtn" style="background: rgba(255,255,240,0.15); backdrop-filter: blur(4px);">Book Now</a>
+    </div>
+</section>
+
+<footer>
+    <p>HideOut Cottages, Kulamavu · Idukki, Kerala</p>
+    <p>Built for peace, not noise.</p>
+    <p style="margin-top: 0.8rem; opacity: 0.7;">forest retreat · moments of quiet</p>
+</footer>
+
+<div class="lightbox" id="lightbox">
+    <span class="close-lightbox">&times;</span>
+    <img id="lightboxImg" src="" alt="enlarged view">
+</div>
+
+<script>
+    // fade-up observer
+    const fadeElements = document.querySelectorAll('.fade-up');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15, rootMargin: "0px 0px -30px 0px" });
+    fadeElements.forEach(el => observer.observe(el));
+
+    // lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const closeLightbox = document.querySelector('.close-lightbox');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    function openLightbox(imageSrc) {
+        lightboxImg.src = imageSrc;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeLightboxFunc() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+        lightboxImg.src = '';
+    }
+    galleryItems.forEach(item => {
+        const imgElement = item.querySelector('img');
+        const imgSrc = imgElement.getAttribute('src');
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openLightbox(imgSrc);
+        });
+    });
+    closeLightbox.addEventListener('click', closeLightboxFunc);
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightboxFunc();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            closeLightboxFunc();
+        }
+    });
+
+    // booking buttons - Airbnb link
+    const airbnbUrl = "https://www.airbnb.co.in/rooms/846868344211191572?unique_share_id=f06c6b31-1caf-49c2-9c93-699f69c527b3&viralityEntryPoint=1&s=76";
+    const bookHeroBtn = document.getElementById('bookHeroBtn');
+    const finalBookBtn = document.getElementById('finalBookBtn');
+    function redirectToAirbnb(e) {
+        e.preventDefault();
+        window.open(airbnbUrl, '_blank');
+    }
+    if (bookHeroBtn) bookHeroBtn.addEventListener('click', redirectToAirbnb);
+    if (finalBookBtn) finalBookBtn.addEventListener('click', redirectToAirbnb);
+
+    // scroll down
+    const scrollDownBtn = document.getElementById('scrollDownBtn');
+    if(scrollDownBtn) {
+        scrollDownBtn.addEventListener('click', () => {
+            document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+
+    // internal anchor smooth
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href').substring(1);
+            if(targetId && document.getElementById(targetId)) {
+                e.preventDefault();
+                document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+    
+    // footer year
+    document.querySelector('footer p:first-child').innerHTML += ` · ${new Date().getFullYear()}`;
+</script>
+</body>
+</html>
