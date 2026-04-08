@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>HideOut Cottages — Kulamavu, Idukki</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="HO_favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* LIGHT MODE (default) — earthy, soft */
+        :root {
+            --bg-primary: #FCF9F2;
+            --bg-card: rgba(255, 248, 235, 0.7);
+            --bg-card-solid: #FFFBF5;
+            --text-primary: #1e2a2a;
+            --text-soft: #3a4a4a;
+            --accent-deep: #1b4332;
+            --accent-soft: #2d5a4b;
+            --border-light: rgba(200, 180, 140, 0.3);
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            --hero-overlay: linear-gradient(135deg, rgba(10, 25, 20, 0.65) 0%, rgba(0, 0, 0, 0.5) 100%);
+            --footer-bg: #0f2e2e;
+            --footer-text: #d6dfcf;
+            --toggle-bg: #2d5a4b;
+            --toggle-color: #FCF9F2;
+            --exp-card-bg: rgba(255, 248, 235, 0.75);
+        }
+
+        /* DARK MODE — deep green, calm, rich */
+        body.dark-mode {
+            --bg-primary: #0c211c;
+            --bg-card: rgba(20, 45, 38, 0.8);
+            --bg-card-solid: #1a3a32;
+            --text-primary: #e2e6d9;
+            --text-soft: #cbd6cc;
+            --accent-deep: #6b9e7a;
+            --accent-soft: #a1bfa5;
+            --border-light: rgba(150, 180, 140, 0.25);
+            --shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            --hero-overlay: linear-gradient(135deg, rgba(5, 25, 18, 0.8) 0%, rgba(0, 0, 0, 0.65) 100%);
+            --footer-bg: #051812;
+            --footer-text: #b7c9b0;
+            --toggle-bg: #6b9e7a;
+            --toggle-color: #0c211c;
+            --exp-card-bg: rgba(30, 60, 50, 0.75);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.5;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.2s ease;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1e3a30; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-deep); border-radius: 3px; }
+
+        h1, h2, h3, .serif-heading {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section { padding: 5rem 0; }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(36px);
+            transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.1), transform 0.9s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--accent-deep);
+            color: #FCF9F2;
+            padding: 0.9rem 2.2rem;
+            border-radius: 3rem;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .btn-primary:hover {
+            background-color: #0f2e2e;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -8px rgba(0,0,0,0.2), 0 0 18px rgba(107, 158, 122, 0.4);
+        }
+        .btn-outline-light {
+            background: transparent;
+            border: 1.5px solid #FCF9F2;
+            color: #FCF9F2;
+            padding: 0.8rem 2rem;
+            border-radius: 3rem;
+            font-weight: 500;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .btn-outline-light:hover {
+            background: #FCF9F2;
+            color: #1b4332;
+        }
+
+        /* Dark mode toggle — elegant, fixed */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 99;
+            background: var(--toggle-bg);
+            color: var(--toggle-color);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            transition: 0.25s;
+            border: 1px solid rgba(255,255,240,0.2);
+        }
+        .theme-toggle:hover {
+            transform: scale(1.08);
+            background: var(--accent-deep);
+        }
+
+        .logo-bar {
+            position: absolute;
+            top: 1.8rem;
+            left: 2rem;
+            z-index: 20;
+        }
+        .logo-bar img {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: url('HO_E_1.jpg') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: var(--hero-overlay);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 1.5rem;
+            color: #FCF9F2;
+        }
+        .hero-content h1 {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .hero-tagline {
+            font-size: 1.5rem;
+            font-weight: 400;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            margin-bottom: 0.75rem;
+        }
+        .hero-sub {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        .scroll-down {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            color: #FCF9F2;
+            font-size: 1.8rem;
+            animation: bounce 2.2s infinite;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(12px); }
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .about-img img {
+            width: 100%;
+            border-radius: 2rem;
+            object-fit: cover;
+            height: 100%;
+            min-height: 380px;
+            box-shadow: 0 20px 35px -15px rgba(0,0,0,0.2);
+            transition: transform 0.4s;
+        }
+        .about-img img:hover { transform: scale(1.01); }
+        .about-text h3 {
+            font-size: 2rem;
+            color: var(--accent-deep);
+            margin-bottom: 1rem;
+        }
+        .about-text .poem {
+            font-size: 1.4rem;
+            margin: 1.5rem 0;
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-soft);
+        }
+        .about-text p { color: var(--text-soft); margin-top: 1rem; }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            margin-top: 2rem;
+        }
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 1.5rem;
+            cursor: pointer;
+            background: var(--bg-card-solid);
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.2,0.9,0.4,1.1);
+            display: block;
+        }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-caption {
+            padding: 0.8rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-soft);
+            background: var(--bg-card-solid);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .experience-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .exp-card {
+            flex: 1 1 180px;
+            text-align: center;
+            padding: 1.8rem 1rem;
+            background: var(--exp-card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            transition: 0.25s;
+            border: 1px solid var(--border-light);
+        }
+        .exp-card i { font-size: 2.2rem; color: var(--accent-deep); margin-bottom: 1rem; }
+        .exp-card h4 { font-weight: 600; margin-bottom: 0.3rem; }
+        .exp-card p { font-size: 0.85rem; color: var(--text-soft); }
+        .exp-card:hover { transform: translateY(-8px); background: var(--bg-card); }
+
+        .note-card {
+            max-width: 680px;
+            margin: 1rem auto 0;
+            padding: 2rem;
+            text-align: center;
+            font-size: 1.05rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        /* Food showcase — portrait style */
+        .food-showcase {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            border-radius: 2.5rem;
+            padding: 2.5rem 2.8rem;
+            margin: 2.5rem 0 1rem;
+            border: 1px solid var(--border-light);
+        }
+        .food-text {
+            flex: 1.2;
+        }
+        .food-text h3 {
+            font-size: 2rem;
+            color: var(--accent-deep);
+            margin-bottom: 0.8rem;
+        }
+        .food-text p {
+            color: var(--text-soft);
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        .food-text .highlight {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--accent-soft);
+        }
+        .food-portrait {
+            flex: 0.8;
+            text-align: center;
+        }
+        .food-portrait img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 2rem;
+            box-shadow: 0 25px 35px -10px rgba(0,0,0,0.2);
+            border: 2px solid rgba(180, 150, 100, 0.3);
+            object-fit: cover;
+            aspect-ratio: 3/4;
+            transition: transform 0.3s;
+        }
+        .food-portrait img:hover { transform: scale(1.02); }
+
+        .location-feel {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(rgba(20, 35, 28, 0.75), rgba(10, 25, 20, 0.8)), url('klmv_scn.jpg') center/cover fixed;
+            border-radius: 2rem;
+            margin: 2rem 0 1.5rem;
+            color: #FCF9F2;
+        }
+        .location-feel h3 { font-size: 2.2rem; margin-bottom: 1rem; }
+        .location-feel p { font-size: 1.2rem; }
+        .quiet-border { background: #dccf9a; width: 70px; height: 2px; margin: 1rem auto; }
+
+        .map-container {
+            max-width: 1000px;
+            margin: 2rem auto 0;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-light);
+        }
+        .map-container iframe { width: 100%; height: 400px; display: block; border: 0; }
+        .map-caption { text-align: center; margin-top: 0.8rem; color: var(--text-soft); font-style: italic; }
+
+        .contact-flex {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        .contact-item {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            padding: 1.5rem 2rem;
+            border-radius: 2rem;
+            min-width: 220px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+        }
+        .contact-item i { font-size: 1.8rem; color: var(--accent-deep); margin-bottom: 0.7rem; }
+        .contact-item a { text-decoration: none; color: var(--text-primary); font-weight: 500; }
+        .contact-item a:hover { color: var(--accent-deep); }
+
+        .final-cta {
+            position: relative;
+            background: url('HO_E_1.jpg') center/cover no-repeat fixed;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(20, 40, 30, 0.75) 0%, rgba(0, 0, 0, 0.65) 100%);
+        }
+        .final-cta .cta-content { position: relative; z-index: 2; color: #FCF9F2; }
+        .final-cta h2 { font-size: 2.8rem; margin-bottom: 1rem; }
+        .final-cta p { font-size: 1.2rem; margin-bottom: 2rem; }
+
+        footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; visibility: hidden;
+            transition: 0.25s;
+        }
+        .lightbox.active { opacity: 1; visibility: visible; }
+        .lightbox img { max-width: 85%; max-height: 80%; border-radius: 1rem; }
+        .close-lightbox { position: absolute; top: 2rem; right: 2rem; font-size: 2.5rem; color: white; cursor: pointer; }
+
+        .section-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--accent-deep);
+        }
+
+        @media (max-width: 850px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .hero { background-attachment: scroll; }
+            .final-cta { background-attachment: scroll; }
+            .food-showcase { flex-direction: column; text-align: center; padding: 2rem; }
+            .food-portrait img { max-width: 260px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 550px) {
+            .hero-tagline { font-size: 1.2rem; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 1.2rem; }
+            .map-container iframe { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Dark mode toggle button -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+    <i class="fas fa-moon"></i>
+</button>
+
+<div class="logo-bar">
+    <img src="HO_logo.png" alt="HideOut Cottages logo">
+</div>
+
+<section class="hero" id="home">
+    <div class="hero-content">
+        <h1>HideOut Cottages</h1>
+        <div class="hero-tagline">Not luxury. Just peace.</div>
+        <div class="hero-sub">3 km away from Kulamavu. Closer to silence.</div>
+        <a href="#" class="btn-primary" id="bookHeroBtn">Book Your Stay <i class="fas fa-arrow-right" style="margin-left: 6px;"></i></a>
+    </div>
+    <div class="scroll-down" id="scrollDownBtn">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<section id="about">
+    <div class="container">
+        <div class="about-grid fade-up">
+            <div class="about-img">
+                <img src="klmv_scn.jpg" alt="Kulamavu reservoir misty mountains">
+            </div>
+            <div class="about-text">
+                <h3>Wake up to green.<br>Sleep with silence.</h3>
+                <div class="poem">No noise. No rush. Just you.</div>
+                <p>Hidden in the lush hills of Idukki, HideOut Cottages is a cozy escape where the forest canopy meets comfort. Surrounded by whispering trees, away from the town's clamor — a place where time slows down. Private, earthy, and deeply quiet.</p>
+                <p style="margin-top: 0.8rem;">Cozy interiors, open skies, and mornings that feel like a prayer. This is not a resort — it’s a return to yourself.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="gallery">
+    <div class="container">
+        <div class="section-title fade-up">— stillness in frames —</div>
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="gallery-item" data-img="HO_G_1.jpg">
+                <img src="HO_G_1.jpg" alt="Ground floor cozy living">
+                <div class="gallery-caption">Inside, it's calm.</div>
+            </div>
+            <div class="gallery-item" data-img="HO_T_1.jpg">
+                <img src="HO_T_1.jpg" alt="Top floor bedroom">
+                <div class="gallery-caption">Slow mornings, warm light.</div>
+            </div>
+            <div class="gallery-item" data-img="HO_T_2.jpg">
+                <img src="HO_T_2.jpg" alt="Reading nook">
+                <div class="gallery-caption">Steps away from silence.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="experience">
+    <div class="container">
+        <div class="section-title fade-up">stay · breathe · unwind</div>
+        <div class="experience-grid fade-up">
+            <div class="exp-card"><i class="fas fa-volume-off"></i><h4>Private and quiet</h4><p>No crowds, just peace</p></div>
+            <div class="exp-card"><i class="fas fa-leaf"></i><h4>Surrounded by nature</h4><p>Forest canopy views</p></div>
+            <div class="exp-card"><i class="fas fa-utensils"></i><h4>Cook your own meals</h4><p>Full pantry freedom</p></div>
+            <div class="exp-card"><i class="fas fa-mug-saucer"></i><h4>Food on request</h4><p>Available at extra cost</p></div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="note-card fade-up">
+            <i class="fas fa-seedling"></i>
+            <p style="font-size: 1.1rem;">No in-house chef.<br>We keep it simple.<br>If you need food, we'll arrange it — at extra cost.</p>
+        </div>
+    </div>
+</section>
+
+<!-- NEW: Portrait food image — traditional Kanji + Payaru -->
+<section>
+    <div class="container">
+        <div class="food-showcase fade-up glass-card">
+            <div class="food-text">
+                <h3>Kanji & Payaru</h3>
+                <p class="highlight">Warm, wholesome, Kerala.</p>
+                <p>On request, we can serve you the most comforting meal: <strong>rice porridge (kanji)</strong> with <strong>green moong curry (payaru)</strong>, a Kerala staple. Simple, nourishing, and made with love — just like home.</p>
+                <p style="font-size: 0.95rem;"><i class="fas fa-leaf" style="margin-right: 6px;"></i> Traditional taste, served with pickle and pappadam.</p>
+            </div>
+            <div class="food-portrait">
+                <!-- Replace with actual kanji+payaru image; currently uses a descriptive placeholder -->
+                <img src="kanji_payaru.jpg" alt="Traditional Kerala Kanji and Payaru (rice porridge with green gram curry)" onerror="this.style.backgroundColor='#3a5e4b'; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22400%22%20viewBox%3D%220%200%20300%20400%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23345e4b%22%2F%3E%3Ctext%20x%3D%2225%22%20y%3D%22200%22%20font-family%3D%22Georgia%22%20font-size%3D%2220%22%20fill%3D%22%23efe6d5%22%3E%F0%9F%8D%9A%20Kanji%20%26%20Payaru%3C%2Ftext%3E%3Ctext%20x%3D%2230%22%20y%3D%22240%22%20font-family%3D%22Georgia%22%20font-size%3D%2216%22%20fill%3D%22%23d4c9b2%22%3Etraditional%20kerala%20meal%3C%2Ftext%3E%3C%2Fsvg%3E'; this.alt='Kanji and payaru illustration'">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="location">
+    <div class="container">
+        <div class="location-feel fade-up">
+            <h3>3 km away from Kulamavu town.</h3>
+            <p>Closer to forest. Far from chaos.</p>
+            <div class="quiet-border"></div>
+            <p style="font-size: 0.95rem; margin-top: 1rem;">Nestled in Idukki's Western Ghats — mist, mountains, and absolute stillness.<br>Overlooking the serene Kulamavu reservoir.</p>
+        </div>
+        <div class="map-container fade-up">
+            <iframe src="https://www.google.com/maps?q=HideOut+Cottages+Kulamavu+Idukki+Kerala&output=embed" allowfullscreen="" loading="lazy" title="HideOut Cottages location"></iframe>
+        </div>
+        <div class="map-caption fade-up">📍 Find us among the hills — Kulamavu, Idukki, Kerala.</div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container">
+        <div class="section-title fade-up">reach out gently</div>
+        <div class="contact-flex fade-up">
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <h4>Call</h4>
+                <a href="tel:+919446868210">+91 94468 68210</a><br>
+                <a href="tel:+918304914600">+91 83049 14600</a>
+            </div>
+            <div class="contact-item">
+                <i class="fab fa-whatsapp"></i>
+                <h4>WhatsApp</h4>
+                <a href="https://wa.me/919446868210" target="_blank">+91 94468 68210</a>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <h4>Email</h4>
+                <a href="mailto:06idukki@gmail.com">06idukki@gmail.com</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="final-cta">
+    <div class="cta-content">
+        <h2>Come for a stay.<br>Leave with silence.</h2>
+        <p>Let the forest hold you.</p>
+        <a href="#" class="btn-outline-light" id="finalBookBtn" style="background: rgba(255,255,240,0.15); backdrop-filter: blur(4px);">Book Now</a>
+    </div>
+</section>
+
+<footer>
+    <p>HideOut Cottages, Kulamavu · Idukki, Kerala</p>
+    <p>Built for peace, not noise.</p>
+    <p style="margin-top: 0.8rem; opacity: 0.7;">forest retreat · moments of quiet</p>
+</footer>
+
+<div class="lightbox" id="lightbox">
+    <span class="close-lightbox">&times;</span>
+    <img id="lightboxImg" src="" alt="enlarged view">
+</div>
+
+<script>
+    (function() {
+        // Dark mode toggle + local storage
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        
+        function setDarkMode(isDark) {
+            if (isDark) {
+                body.classList.add('dark-mode');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                body.classList.remove('dark-mode');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+            localStorage.setItem('hideoutDarkMode', isDark ? 'true' : 'false');
+        }
+        
+        const saved = localStorage.getItem('hideoutDarkMode');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialDark = saved === 'true' || (saved === null && prefersDark);
+        setDarkMode(initialDark);
+        
+        themeToggle.addEventListener('click', () => {
+            setDarkMode(!body.classList.contains('dark-mode'));
+        });
+
+        // Fade-up observer
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -30px 0px" });
+        fadeElements.forEach(el => observer.observe(el));
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const closeLightbox = document.querySelector('.close-lightbox');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightboxFunc() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            lightboxImg.src = '';
+        }
+        galleryItems.forEach(item => {
+            const img = item.querySelector('img');
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openLightbox(img.src);
+            });
+        });
+        closeLightbox.addEventListener('click', closeLightboxFunc);
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightboxFunc(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightboxFunc(); });
+
+        // Booking redirect
+        const airbnbUrl = "https://www.airbnb.co.in/rooms/846868344211191572?unique_share_id=f06c6b31-1caf-49c2-9c93-699f69c527b3&viralityEntryPoint=1&s=76";
+        const bookHero = document.getElementById('bookHeroBtn');
+        const finalBook = document.getElementById('finalBookBtn');
+        const redirect = (e) => { e.preventDefault(); window.open(airbnbUrl, '_blank'); };
+        if(bookHero) bookHero.addEventListener('click', redirect);
+        if(finalBook) finalBook.addEventListener('click', redirect);
+
+        // Scroll down
+        document.getElementById('scrollDownBtn').addEventListener('click', () => {
+            document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Smooth internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const id = this.getAttribute('href').substring(1);
+                if(id && document.getElementById(id)) {
+                    e.preventDefault();
+                    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Footer year
+        const footerFirst = document.querySelector('footer p:first-child');
+        if(footerFirst) footerFirst.innerHTML += ` · ${new Date().getFullYear()}`;
+    })();
+</script>
+</body>
+</html>
